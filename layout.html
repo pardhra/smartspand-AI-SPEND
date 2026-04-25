@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Spend AI | Next-Gen Finance</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <div id="chatPanel" class="chat-panel">
+            <div class="chat-header">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-robot" style="color: var(--primary);"></i>
+                    <span style="font-weight: 600;">AI Assistant</span>
+                </div>
+                <i class="fas fa-times" style="cursor: pointer; color: var(--text-dim);" onclick="toggleChat()"></i>
+            </div>
+            <div id="chatMessages" class="chat-messages">
+                <div class="msg bot">Welcome back! I'm your Smart Spend AI. How can I help you optimize your finances today?</div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" id="userInput" class="glass-input" placeholder="Ask about saving...">
+                <button onclick="sendMessage()" class="btn-premium" style="padding: 10px 15px;">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        <div class="chat-bubble" onclick="toggleChat()">
+            <i class="fas fa-comment-dots fa-2x" style="color: white;"></i>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
