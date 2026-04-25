@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1 id="heroTitle">Smart Spend AI</h1>
+        <p>Experience the future of personal finance. Our neural engine tracks, analyzes, and predicts your spending patterns to help you build wealth effortlessly.</p>
+        <div style="display: flex; gap: 20px; justify-content: center;">
+            <a href="{{ url_for('dashboard') }}" class="btn-premium">
+                Launch Dashboard <i class="fas fa-rocket"></i>
+            </a>
+            <a href="#" class="btn-premium" style="background: var(--glass); box-shadow: none; border: 1px solid var(--glass-border);">
+                Watch Demo <i class="fas fa-play"></i>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Floating background elements for extra "WOW" -->
+    <div class="glass-card" style="position: absolute; top: 15%; left: 10%; width: 150px; height: 100px; animation: float 6s infinite ease-in-out; opacity: 0.5;"></div>
+    <div class="glass-card" style="position: absolute; bottom: 20%; right: 10%; width: 200px; height: 120px; animation: float 8s infinite ease-in-out reverse; opacity: 0.5;"></div>
+</div>
+{% endblock %}
