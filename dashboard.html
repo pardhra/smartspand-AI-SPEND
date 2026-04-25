@@ -1,0 +1,209 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="app-layout">
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <i class="fas fa-chart-pie"></i>
+            <span>Smart Spend</span>
+        </div>
+        <nav style="flex: 1;">
+            <a href="javascript:void(0)" onclick="showSection('dashboard')" class="nav-item active" id="nav-dashboard">
+                <i class="fas fa-home"></i> <span>Overview</span>
+            </a>
+            <a href="javascript:void(0)" onclick="showSection('transactions')" class="nav-item" id="nav-transactions">
+                <i class="fas fa-list-ul"></i> <span>History</span>
+            </a>
+            <a href="javascript:void(0)" onclick="showSection('analytics')" class="nav-item" id="nav-analytics">
+                <i class="fas fa-chart-line"></i> <span>Insights</span>
+            </a>
+            <a href="javascript:void(0)" onclick="showSection('goals')" class="nav-item" id="nav-goals">
+                <i class="fas fa-bullseye"></i> <span>Goals</span>
+            </a>
+            <a href="javascript:void(0)" onclick="showSection('settings')" class="nav-item" id="nav-settings">
+                <i class="fas fa-sliders-h"></i> <span>Settings</span>
+            </a>
+        </nav>
+        <a href="{{ url_for('index') }}" class="nav-item" style="margin-top: auto; color: var(--danger);">
+            <i class="fas fa-power-off"></i> <span>Sign Out</span>
+        </a>
+    </aside>
+
+    <main class="main-content">
+        <!-- Overview Section -->
+        <div id="dashboardSection" class="content-section active">
+            <div class="section-header flex-row justify-between">
+                <div>
+                    <h1>Account Overview</h1>
+                    <p>Track your spending performance and AI insights.</p>
+                </div>
+                <div class="card" style="padding: 10px 20px; display: flex; align-items: center; gap: 15px;">
+                    <div style="text-align: right;">
+                        <div style="font-size: 0.7rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Financial Health</div>
+                        <div id="healthScore" style="font-size: 1.25rem; font-weight: 800; color: var(--primary);">10/10</div>
+                    </div>
+                    <i class="fas fa-shield-alt" style="color: var(--primary); font-size: 1.5rem;"></i>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="card stat-card">
+                    <div class="label">Net Outflow</div>
+                    <div class="value">₹<span id="totalExpense">0</span></div>
+                </div>
+                <div class="card stat-card">
+                    <div class="label">Monthly Limit</div>
+                    <div class="value">₹<span id="monthlyBudget">0</span></div>
+                </div>
+                <div class="card stat-card">
+                    <div class="label">Available Capital</div>
+                    <div class="value" style="color: var(--primary);">₹<span id="budgetLeft">0</span></div>
+                </div>
+                <div class="card stat-card">
+                    <div class="label">Projected Expenditure</div>
+                    <div id="predictionValue" class="value" style="color: var(--secondary);">...</div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 350px 1fr; gap: 2rem;">
+                <div style="display: flex; flex-direction: column; gap: 2rem;">
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem;">Log Transaction</h3>
+                        <form id="expenseForm">
+                            <div class="form-group">
+                                <label class="form-label">Merchant Name</label>
+                                <input type="text" id="expName" class="form-input" placeholder="Enter title..." required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Transaction Amount</label>
+                                <input type="number" id="expAmount" class="form-input" placeholder="0.00" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Category</label>
+                                <select id="expCategory" class="form-input">
+                                    <option value="Food">Food & Dining</option>
+                                    <option value="Travel">Transportation</option>
+                                    <option value="Shopping">Shopping</option>
+                                    <option value="Bills">Bills & Utilities</option>
+                                    <option value="Groceries">Groceries</option>
+                                    <option value="Entertainment">Entertainment</option>
+                                    <option value="Health">Health & Fitness</option>
+                                    <option value="Education">Education</option>
+                                    <option value="Investments">Investments</option>
+                                    <option value="Rent">Rent & Mortgage</option>
+                                    <option value="Insurance">Insurance</option>
+                                    <option value="Gifts">Gifts & Donations</option>
+                                    <option value="Subscriptions">Subscriptions</option>
+                                    <option value="Others">Miscellaneous</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-primary" style="width: 100%;">
+                                Confirm Transaction <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.25rem; font-size: 1rem;">Neural Insights</h3>
+                        <div id="aiSuggestions" style="display: flex; flex-direction: column; gap: 12px;"></div>
+                    </div>
+                </div>
+
+                <div class="card" style="display: flex; flex-direction: column;">
+                    <h3 style="margin-bottom: 1.5rem; font-size: 1.1rem;">Allocation Analysis</h3>
+                    <div style="flex: 1; min-height: 300px;">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                    <div style="margin-top: 2.5rem;">
+                        <h3 style="margin-bottom: 1rem; font-size: 1rem;">Recent Activity</h3>
+                        <table class="table-container" id="expenseTableShort">
+                            <thead>
+                                <tr>
+                                    <th>Merchant</th>
+                                    <th>Type</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions Section -->
+        <div id="transactionsSection" class="content-section" style="display: none;">
+            <div class="section-header">
+                <h1>Transaction History</h1>
+                <p>Full audit trail of your account activities.</p>
+            </div>
+            <div class="card">
+                <table class="table-container" id="expenseTableFull">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Merchant</th>
+                            <th>Type</th>
+                            <th>Value</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Analytics Section -->
+        <div id="analyticsSection" class="content-section" style="display: none;">
+            <div class="section-header">
+                <h1>Data Insights</h1>
+                <p>Deep dive into your spending velocity and trends.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                <div class="card" style="height: 450px;">
+                    <h3 style="margin-bottom: 1rem;">Monthly Flow</h3>
+                    <canvas id="trendChartFull"></canvas>
+                </div>
+                <div class="card" style="height: 450px;">
+                    <h3 style="margin-bottom: 1rem;">Spending Momentum</h3>
+                    <canvas id="velocityChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Goals Section -->
+        <div id="goalsSection" class="content-section" style="display: none;">
+            <div class="section-header">
+                <h1>Wealth Goals</h1>
+                <p>Track your milestones and objective progress.</p>
+            </div>
+            <div class="stats-grid">
+                <div class="card">
+                    <div class="label">Liquidity Reserves</div>
+                    <div class="value">₹<span id="savingsVal">0</span></div>
+                </div>
+                <div class="card">
+                    <div class="label">Primary Target</div>
+                    <div class="value">₹50,000</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settingsSection" class="content-section" style="display: none;">
+            <div class="section-header">
+                <h1>System Settings</h1>
+                <p>Configure your account limits and preferences.</p>
+            </div>
+            <div class="card" style="max-width: 500px;">
+                <h3 style="margin-bottom: 1.5rem;">Expense Threshold</h3>
+                <div class="form-group">
+                    <label class="form-label">Set Monthly Limit (₹)</label>
+                    <input type="number" id="budgetInput" class="form-input" placeholder="2000">
+                </div>
+                <button onclick="updateBudget()" class="btn-primary" style="width: 100%;">Commit Changes</button>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
